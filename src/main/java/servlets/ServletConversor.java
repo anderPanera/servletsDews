@@ -3,6 +3,9 @@ package servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.Locale;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +17,20 @@ import beans.ConversorCF;
 public class ServletConversor extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
+	HashSet<String> locale = new HashSet<String> ();
 	
 	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		//Obtener locale
+		try {
+			Locale currentLocale = request.getLocale();
+			locale.add(currentLocale.getCountry());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
         //Obtener datos del formulario
         request.setCharacterEncoding("utf-8");
         String msg = "";
@@ -51,7 +65,9 @@ public class ServletConversor extends HttpServlet {
             } else {
             	out.println("<p>" + msg + "</p>");
             }
-            out.println("<a href='files/conversorCF.html'>Enlace para volver al formulario</a>");
+            out.println("<a href='files/conversorCF.html'>Enlace para volver al formulario</a><br>");
+            out.println("<p>" + locale + "</p>");
+            out.println("<p>Se han establecido conexiones desde " + locale.size() + " distintos locale’s</p>");
             out.println("</body>");
             out.println("</html>");
         } finally {
