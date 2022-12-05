@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import beans.ConversorCF;
 
 
 @WebServlet(name="ServletConversor", urlPatterns = {"/ServletConversor"})
@@ -19,21 +20,18 @@ public class ServletConversor extends HttpServlet {
         //Obtener datos del formulario
         request.setCharacterEncoding("utf-8");
         String msg = "";
-        float cel = 0;
-        float fah = 0;
+        ConversorCF temperatura = new ConversorCF(0, 'c');
         if (request.getParameter("celfah") != null) {
         	if (request.getParameter("cel") == "" ) {
         		msg = "ERROR: Debes indicar los celsius";
         	} else {
-        		cel = Float.parseFloat(request.getParameter("cel"));
-            	fah = cel * 9/5 + 32;
+        		temperatura = new ConversorCF(Float.parseFloat(request.getParameter("cel")), 'c');
         	}
         } else {
         	if (request.getParameter("fah") == "") {
         		msg = "ERROR: Debes indicar los fahrenheit";
         	} else {
-	        	fah = Float.parseFloat(request.getParameter("fah"));
-	        	cel = (fah - 32) * 5/9;
+        		temperatura = new ConversorCF(Float.parseFloat(request.getParameter("fah")), 'f');
         	}
         }
         
@@ -48,8 +46,8 @@ public class ServletConversor extends HttpServlet {
             out.println("<body>");
             if (msg == "") {
             	out.println("<h1><strong>Resultado de la conversion:</strong></h1>");
-                out.println("<p><strong>Valor en celsius:</strong> " + cel + " </p>");
-                out.println("<p><strong>Valor en fahrenheit:</strong> " + fah + " </p>");
+                out.println("<p><strong>Valor en celsius:</strong> " + temperatura.getCelsius() + " </p>");
+                out.println("<p><strong>Valor en fahrenheit:</strong> " + temperatura.getFahrenheit() + " </p>");
             } else {
             	out.println("<p>" + msg + "</p>");
             }
